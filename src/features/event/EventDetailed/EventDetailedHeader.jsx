@@ -1,6 +1,7 @@
 import React from "react";
 import { Segment, Image, Item, Header, Button } from "semantic-ui-react";
 import { Link } from "react-router-dom";
+import { convertDate } from "../../../app/common/util/dateUtils";
 
 const eventImageStyle = {
   filter: "brightness(30%)"
@@ -34,7 +35,7 @@ const EventDetailedHeader = ({ event }) => {
                   content={event.title}
                   style={{ color: "white" }}
                 />
-                <p>{event.date}</p>
+                <p>{convertDate(event.date)}</p>
                 <p>
                   Hosted by <strong>{event.hostedBy}</strong>
                 </p>

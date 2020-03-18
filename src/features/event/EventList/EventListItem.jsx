@@ -21,7 +21,7 @@ class EventListItem extends Component {
         </Segment>
         <Segment>
           <span>
-            <Icon name='clock' /> {event.date} |
+            <Icon name='clock' /> {JSON.stringify(event.date).slice(1, 11)}
             <Icon name='marker' /> {event.venue}
           </span>
         </Segment>

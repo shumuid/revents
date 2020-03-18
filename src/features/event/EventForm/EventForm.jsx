@@ -7,6 +7,13 @@ import cuid from "cuid";
 import TextInput from "../../../app/common/form/TextInput";
 import TextArea from "../../../app/common/form/TextArea";
 import SelectInput from "../../../app/common/form/SelectInput";
+import {
+  combineValidators,
+  composeValidators,
+  isRequired,
+  hasLengthGreaterThan
+} from "revalidate";
+import DateInput from "../../../app/common/form/DateInput";
 
 const mapStateToProps = (state, ownProps) => {
   const eventId = ownProps.match.params.id;
@@ -28,6 +35,20 @@ const mapActionsToProps = {
   updateEvent
 };
 
+const validate = combineValidators({
+  title: isRequired({ message: "The event title is required" }),
+  category: isRequired({ message: "The category is required" }),
+  description: composeValidators(
+    isRequired({ message: "Please enter a description" }),
+    hasLengthGreaterThan(4)({
+      message: "Description needs to be at least 5 characters"
+    })
+  )(),
+  city: isRequired("city"),
+  venue: isRequired("venue"),
+  date: isRequired("date")
+});
+
 const category = [
   { key: "drinks", text: "Drinks", value: "drinks" },
   { key: "culture", text: "Culture", value: "culture" },
@@ -47,16 +68,22 @@ class EventForm extends Component {
         ...values,
         id: cuid(),
         hostPhotoURL: "/assets/user.png",
-        hostedBy: "Bob"
+        hostedBy: "Bob",
+        attendees: []
       };
-
       this.props.createEvent(newEvent);
       this.props.history.push(`/events/${newEvent.id}`);
     }
   };
 
   render() {
-    const { history, initialValues } = this.props;
+    const {
+      history,
+      initialValues,
+      invalid,
+      submitting,
+      pristine
+    } = this.props;
     return (
       <Grid>
         <Grid.Column width={10}>
@@ -96,10 +123,17 @@ class EventForm extends Component {
               />
               <Field
                 name='date'
-                component={TextInput}
+                component={DateInput}
+                dateFormat='dd LLL yyyy h:mm a'
+                showTimeSelect
+                timeFormat='HH:mm'
                 placeholder='Event Date'
               />
-              <Button positive type='submit'>
+              <Button
+                disabled={invalid || submitting || pristine}
+                positive
+                type='submit'
+              >
                 Submit
               </Button>
               <Button
@@ -124,4 +158,4 @@ class EventForm extends Component {
 export default connect(
   mapStateToProps,
   mapActionsToProps
-)(reduxForm({ form: "eventForm" })(EventForm));
+)(reduxForm({ form: "eventForm", validate })(EventForm));
