@@ -6,23 +6,20 @@ const AnyReactComponent = () => <Icon name='marker' size='big' color='red' />;
 
 class SimpleMap extends Component {
   static defaultProps = {
-    center: {
-      lat: 59.95,
-      lng: 30.33
-    },
-    zoom: 11
+    zoom: 6
   };
 
   render() {
+    const { latlong } = this.props;
     return (
       // Important! Always set the container height explicitly
-      <div style={{ height: "300px", width: "100%" }}>
+      <div style={{ height: "600px", width: "100%" }}>
         <GoogleMapReact
-          bootstrapURLKeys={{ key: "Your API KEY" }}
-          defaultCenter={this.props.center}
+          bootstrapURLKeys={{ key: process.env.REACT_APP_KEY }}
+          defaultCenter={latlong}
           defaultZoom={this.props.zoom}
         >
-          <AnyReactComponent lat={59.955413} lng={30.337844} />
+          <AnyReactComponent lat={latlong.lat} lng={latlong.lng} />
         </GoogleMapReact>
       </div>
     );
