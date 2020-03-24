@@ -6,6 +6,7 @@ import SignedOutMenu from "../Menus/SignedOutMenu";
 import SignedInMenu from "../Menus/SignedInMenu";
 import { openModal } from "../../modals/modalActions";
 import { logout } from "../../auth/authActions";
+import { Fragment } from "react";
 
 const mapActionsToProps = {
   openModal,
@@ -34,18 +35,22 @@ class NavBar extends Component {
             Re-vents
           </Menu.Item>
           <Menu.Item as={NavLink} to='/events' name='Events' />
-          <Menu.Item as={NavLink} to='/people' name='People' />
-          <Menu.Item as={NavLink} to='/test' name='Test' />
-          <Menu.Item>
-            <Button
-              as={Link}
-              to='/createEvent'
-              floated='right'
-              positive
-              inverted
-              content='Create Event'
-            />
-          </Menu.Item>
+          {auth.authenticated && (
+            <Fragment>
+              <Menu.Item as={NavLink} to='/people' name='People' />
+              <Menu.Item as={NavLink} to='/test' name='Test' />
+              <Menu.Item>
+                <Button
+                  as={Link}
+                  to='/createEvent'
+                  floated='right'
+                  positive
+                  inverted
+                  content='Create Event'
+                />
+              </Menu.Item>
+            </Fragment>
+          )}
           {auth.authenticated ? (
             <SignedInMenu
               signOut={this.handleSignOut}
